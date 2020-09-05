@@ -29,7 +29,9 @@ When you'll click on the trash icon, a popup will also appear. It will ask you a
 
 ## Student Report
 
--   What was the main challenge that you had to face during the project?
--   Did you use Promise callbacks? Or Async Await?
+ 1) What was the main challenge that you had to face during the project?
+ - getting the name right , cancel button , submit and deleted are the main challenge . I could not get them right.
 
+-   Did you use Promise callbacks? Or Async Await?
+   - I use Promise callbacks but I don't whether is it true or not.
 Good luck everybody 🐻
