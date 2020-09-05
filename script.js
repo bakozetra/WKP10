@@ -39,13 +39,62 @@ const displayList = data => {
 		.join('');
 };
 
-const editPartner = () => {
+const editPartner = (e) => {
 	// code edit function here
+	return new Promise( async function(resolve) {
+	const popup = document.createElement('form');
+    const	id = faker.random.uuid();
+	  const lastName = faker.name.lastName();
+		const firstName = faker.name.firstName();
+		const jobTitle = faker.name.jobTitle();
+		const jobArea = faker.name.jobArea();
+		const phone = faker.phone.phoneNumber();
+	popup.classList.add('popup');
+	popup.insertAdjacentHTML('afterbegin',
+	`
+	<div>
+		<fieldset>
+			<label for="name">Last name</label>
+			<input type="text" name="name"   placeholder="${lastName}">
+		</fieldset>
+		<fieldset>
+			<label for="firstN">First name</label>
+			<input type="text" name="firstN"  placeholder="${firstName}">
+		</fieldset>
+		<fieldset>
+			<label for="title">Name of job</label>
+			<input type="text" name="tilte"   placeholder="${jobTitle}" >
+		</fieldset>
+		<fieldset>
+			<label for="job">Job area</label>
+			<input type="text" name="job"   placeholder="${jobArea}">
+		</fieldset>
+		<fieldset>
+			<label for="number">Phone number </label>
+			<input type="text" name="number"  placeholder="${phone}">
+		</fieldset>
+		<button>Save</button>
+	<div>
+	`);
+	popup.addEventListener('submit', function(e) {
+		e.preventDefault();
+		// popup.input.value
+		resolve(e.target.input.value);
+},{once : true})
+	document.body.appendChild(popup);
+	popup.classList.add('open');
+})
+};
+console.log(editPartner);
+const editPartnerPopup = (e) => {
+	// create edit popup here
+	const edit = e.target.closest('.edit');
+	if(edit) {
+    return editPartner();
+	}
 };
 
-const editPartnerPopup = () => {
-	// create edit popup here
-};
+window.addEventListener('click', editPartnerPopup);
 
 const deletePartner = () => {
 	// code delete function gere
