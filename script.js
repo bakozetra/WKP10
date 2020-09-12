@@ -39,66 +39,82 @@ const displayList = data => {
 		.join('');
 };
 
-const editPartner = (e) => {
-	// code edit function here
-	return new Promise( async function(resolve) {
-	const popup = document.createElement('form');
-    const	id = faker.random.uuid();
-	  const lastName = faker.name.lastName();
-		const firstName = faker.name.firstName();
-		const jobTitle = faker.name.jobTitle();
-		const jobArea = faker.name.jobArea();
-		const phone = faker.phone.phoneNumber();
-	popup.classList.add('popup');
-	popup.insertAdjacentHTML('afterbegin',
-	`
-	<div>
-		<fieldset>
-			<label for="name">Last name</label>
-			<input type="text" name="name"   placeholder="${lastName}">
-		</fieldset>
-		<fieldset>
-			<label for="firstN">First name</label>
-			<input type="text" name="firstN"  placeholder="${firstName}">
-		</fieldset>
-		<fieldset>
-			<label for="title">Name of job</label>
-			<input type="text" name="tilte"   placeholder="${jobTitle}" >
-		</fieldset>
-		<fieldset>
-			<label for="job">Job area</label>
-			<input type="text" name="job"   placeholder="${jobArea}">
-		</fieldset>
-		<fieldset>
-			<label for="number">Phone number </label>
-			<input type="text" name="number"  placeholder="${phone}">
-		</fieldset>
-		<button>Save</button>
-	<div>
-	`);
-	popup.addEventListener('submit', function(e) {
-		e.preventDefault();
-		// popup.input.value
-		resolve(e.target.input.value);
-},{once : true})
-	document.body.appendChild(popup);
-	popup.classList.add('open');
-})
-};
-console.log(editPartner);
-const editPartnerPopup = (e) => {
-	// create edit popup here
-	const edit = e.target.closest('.edit');
-	if(edit) {
-    return editPartner();
+function wait(ms = 0) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function destroyPopup(popup) {
+popup.classList.remove('open');
+await  wait(1000);
+// remove it from the dom
+popup.remove();
+// remove from the javascript memory
+popup = null; 
+}
+
+function editPartner(e) {
+	const edit = e.target.closest('button.edit');
+	if (edit) {
+		const editTr = e.target.closest('tr');
+		const id = editTr.dataset.id;
+		console.log(id);
+		editPartnerPopup(id);
 	}
-};
 
-window.addEventListener('click', editPartnerPopup);
+}
+tbody.addEventListener('click',editPartner);
 
-const deletePartner = () => {
-	// code delete function gere
-};
+const editPartnerPopup = (id) => {
+	return new Promise( async function(resolve) {
+		const form = document.createElement('form');
+		form.classList.add('popup');
+		console.log(form);
+		const personId = persons.find(person => person.id === id);
+		console.log(personId);
+		form.insertAdjacentHTML('afterbegin',
+    `
+    <div>
+      <fieldset>
+        <label for="name">Last name</label>
+        <input type="text" name="name"   value="${personId.lastName}">
+      </fieldset>
+      <fieldset>
+        <label for="firstN">First name</label>
+        <input type="text" name="firstN"  value="${personId.firstName}">
+      </fieldset>
+      <fieldset>
+        <label for="title">Name of job</label>
+        <input type="text" name="tilte"   value="${personId.jobTitle}" >
+      </fieldset>
+      <fieldset>
+        <label for="job">Job area</label>
+        <input type="text" name="job"   value="${personId.jobArea}">
+      </fieldset>
+      <fieldset>
+        <label for="number">Phone number </label>
+        <input type="number" name="number"  value="${personId.phone}">
+      </fieldset>
+			<button type ="submit">Save</button>
+			<button type ="button">Cancel</button>
+    <div>
+		`);
+		
+		form.addEventListener('submit', function(e) {
+			e.preventDefault();
+			console.log(e.target);
+			resolve(
+				personId.lastName = personId.lastName.value ,
+				personId.firstName  = personId.firstName.value ,
+				personId.jobTitle = personId.jobTitle.value,
+				personId.jobArea = personId.jobArea.value,
+        personId.phone = personId.phone.value
+			); 
+			destroyPopup(form);
+		},{once : true})
+		document.body.appendChild(form);
+		await wait(50)
+		form.classList.add('open');
+	}) 
+}
 
 const deleteDeletePopup = () => {
 	// create confirmation popup here
